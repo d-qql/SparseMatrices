@@ -39,12 +39,12 @@ void DOK::resize(int n, int m){
     this->size_m=m;
 }
 
-const DOK DOK::operator+(const DOK &matrix){
+const DOK DOK::operator+(const DOK &matrix) const{
     try{
         if(this->size_n != matrix.size_n || this->size_m != matrix.size_m) throw 1;
         DOK M = *this;
         for(auto j: matrix.dict){
-            if(M.dict.count(j.first)) {
+            if(M.dict.find(j.first)!=M.dict.cend()) {
                 M.dict[j.first] += j.second;
             }else{
                 M.dict.insert({j.first, j.second});
@@ -57,6 +57,9 @@ const DOK DOK::operator+(const DOK &matrix){
         cout<<"Sizes of Matrices are different."<<endl;
     }
 }
+const DOK DOK::operator-(const DOK &matrix) const{
+    return -1*matrix+*this;
+}
 
  void DOK::print() const {
     cout<<endl;
@@ -68,7 +71,7 @@ const DOK DOK::operator+(const DOK &matrix){
     }
 }
 
-const DOK DOK::operator*(const DOK &matrix){
+const DOK DOK::operator*(const DOK &matrix) const{
     try {
         if(this->size_m != matrix.size_n) throw 1;
         DOK M = DOK(this->size_n, matrix.size_m);

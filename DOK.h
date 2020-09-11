@@ -31,8 +31,9 @@ public:
     void resize(int n, int m);
     DOK(vector<Triplet> &matrix, int n, int m);
     DOK(int n, int m);
-    const DOK operator+(const DOK &matrix);
-    const DOK operator*(const DOK &matrix);
+    const DOK operator+(const DOK &matrix) const;
+    const DOK operator-(const DOK &matrix) const;
+    const DOK operator*(const DOK &matrix) const;
     const DOK operator*(double k) const;
     void print() const;
 };
