@@ -37,7 +37,11 @@ public:
     const DOK operator*(double k) const;
     void print() const;
 };
+void operator+=(DOK& left, const DOK& right);
+void operator-=(DOK& left, const DOK& right);
 const DOK operator*(double k, const DOK &matrix);
+void operator*=(DOK& left, const DOK& right);
+void operator*=(DOK& left, double k);
 ostream& operator<<(ostream &os, const DOK &matrix);
 
 #endif //SPARSEMATRICES_DOK_H

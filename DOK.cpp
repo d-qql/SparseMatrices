@@ -70,7 +70,18 @@ const DOK DOK::operator-(const DOK &matrix) const{
         cout<<endl;
     }
 }
-
+void operator+=(DOK& left, const DOK& right){
+    left=left+right;
+}
+void operator-=(DOK& left, const DOK& right){
+    left = left - right;
+}
+void operator*=(DOK& left, const DOK& right){
+    left = left * right;
+}
+void operator*=(DOK& left, double k){
+    left = left*k;
+}
 const DOK DOK::operator*(const DOK &matrix) const{
     try {
         if(this->size_m != matrix.size_n) throw 1;

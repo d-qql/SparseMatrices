@@ -22,6 +22,12 @@ int main() {
     p.print();
     cout<<p+k;
     cout<<p*10<<2*p;
+    p*=k;
+    cout<<p;
+    k*=20;
+    cout<<k;
+    k+=p;
+    cout<<k;
 
 
     return 0;
