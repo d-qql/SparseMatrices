@@ -121,3 +121,9 @@ ostream& operator<<(ostream &os, const DOK &matrix){
     matrix.DOK::print();
     return os;
 }
+ double& DOK::operator()(int row, int col){
+    return this->dict.find({row, col})->second;
+}
+const double& DOK::operator()(int row, int col) const{
+    return this->dict.find({row, col})->second;
+}

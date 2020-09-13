@@ -8,6 +8,7 @@
 #include <map>
 #include <iostream>
 #include <vector>
+#include <iterator>
 using namespace std;
 struct Triplet{
     int i;
@@ -36,6 +37,8 @@ public:
     const DOK operator*(const DOK &matrix) const;
     const DOK operator*(double k) const;
     void print() const;
+    double& operator()(int row, int col);
+    const double& operator()(int row, int col) const;
 };
 void operator+=(DOK& left, const DOK& right);
 void operator-=(DOK& left, const DOK& right);

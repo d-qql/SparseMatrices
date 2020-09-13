@@ -29,6 +29,10 @@ int main() {
     k+=p;
     cout<<k;
 
+    cout<<p(1, 3);
+    p(1, 3) = 2;
+    cout<<p(1, 3);
+
 
     return 0;
 }
