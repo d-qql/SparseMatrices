@@ -2,7 +2,7 @@
 #include "DOK.h"
 int main() {
     //Перегружены операторы сложения матриц, умножения матриц, умножения матрицы на число и наоборот
-    vector<Triplet> in = {{1, 1, 1},
+    vector<Triplet<double>> in = {{1, 1, 1},
                           {1, 2, 2},
                           {1, 3, 3},
                           {2, 1, 4},
@@ -11,26 +11,28 @@ int main() {
                           {3, 1, 7},
                           {3, 2, 8},
                           {3, 3, 9}};
-    DOK k = DOK(in, 3, 3);
+    DOK<double> k = DOK<double>(in, 3, 3);
 
-    DOK p = DOK(in, 3, 3);
+    DOK<double> p = DOK<double>(in, 3, 3);
     cout<<p*k;
     k.print();
     p.print();
     p=p+k;
-
+    double m = 2;
     p.print();
     cout<<p+k;
-    cout<<p*10<<2*p;
+    cout<<p*2.<<2.*p;
     p*=k;
+    p*=m;
     cout<<p;
-    k*=20;
+    cout<<p*m;
+    k*=20.;
     cout<<k;
     k+=p;
     cout<<k;
 
     cout<<p(1, 3);
-    p(1, 3) = 2;
+   p(1, 3) = 2;
     cout<<p(1, 3);
 
 

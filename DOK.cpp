@@ -3,27 +3,30 @@
 //
 
 #include "DOK.h"
-DOK::DOK(int n, int m){
+template<typename  T>
+DOK<T>::DOK(int n, int m){
     this->resize(n, m);
 }
-DOK::DOK(vector<Triplet> &matrix, int n, int m) {
+template<typename  T>
+DOK<T>::DOK(vector<Triplet<T>> &matrix, int n, int m) {
     //cout<<"Input height and weight of matrix: "<<endl;
     //cin>>n>>m;
     this->resize(n, m);
     this->fill(matrix);
 }
-
-void DOK::fill(vector<Triplet> &matrix) {
-    this->count=matrix.size();
+template<typename  T>
+void DOK<T>::fill(vector<Triplet<T>> &matrix) {
+    //this->count=matrix.size();
     //cout<<"Input your coordinates with value in format \"i j val\" "<<endl;
-    for(int k = 0; k < this->count; k++){
+    for(int k = 0; k < matrix.size(); k++){
         this->insert(matrix[k]);
     }
 }
 /*
  * Inserts element with coordinates i, j and value b in matrix
  */
-void DOK::insert(Triplet &Element){
+template<typename  T>
+void DOK<T>::insert(const Triplet<T> &Element){
     try {
         if(Element.i > this->size_n || Element.j > size_m) throw 1;
         pair<int, int> coordinates = {Element.i, Element.j};
@@ -33,22 +36,22 @@ void DOK::insert(Triplet &Element){
         cout<<"Inserting coordinates {"<<Element.i<<", "<<Element.j<<"} out of range. "<<endl;
     }
 }
-
-void DOK::resize(int n, int m){
+template<typename  T>
+void DOK<T>::resize(int n, int m){
     this->size_n=n;
     this->size_m=m;
 }
-
-const DOK DOK::operator+(const DOK &matrix) const{
+template<typename  T>
+const DOK<T> DOK<T>::operator+(const DOK<T> &matrix) const{
     try{
         if(this->size_n != matrix.size_n || this->size_m != matrix.size_m) throw 1;
-        DOK M = *this;
+        DOK<T> M = *this;
         for(auto j: matrix.dict){
             if(M.dict.find(j.first)!=M.dict.cend()) {
                 M.dict[j.first] += j.second;
             }else{
                 M.dict.insert({j.first, j.second});
-                M.count++;
+                //M.count++;
             }
         }
         return M;
@@ -57,11 +60,12 @@ const DOK DOK::operator+(const DOK &matrix) const{
         cout<<"Sizes of Matrices are different."<<endl;
     }
 }
-const DOK DOK::operator-(const DOK &matrix) const{
-    return -1*matrix+*this;
+template<typename  T>
+const DOK<T> DOK<T>::operator-(const DOK<T> &matrix) const{
+    return -1.*matrix+*this;
 }
-
- void DOK::print() const {
+template<typename  T>
+ void DOK<T>::print() const {
     cout<<endl;
     for(int i = 1; i <= this->size_n; i++){
         for(int j = 1; j <= this->size_m; j++){
@@ -70,32 +74,24 @@ const DOK DOK::operator-(const DOK &matrix) const{
         cout<<endl;
     }
 }
-void operator+=(DOK& left, const DOK& right){
-    left=left+right;
-}
-void operator-=(DOK& left, const DOK& right){
-    left = left - right;
-}
-void operator*=(DOK& left, const DOK& right){
-    left = left * right;
-}
-void operator*=(DOK& left, double k){
-    left = left*k;
-}
-const DOK DOK::operator*(const DOK &matrix) const{
+
+
+
+template<typename  T>
+const DOK<T> DOK<T>::operator*(const DOK<T> &matrix) const{
     try {
         if(this->size_m != matrix.size_n) throw 1;
-        DOK M = DOK(this->size_n, matrix.size_m);
+        DOK<T> M = DOK(this->size_n, matrix.size_m);
         for (int i = 1; i <= this->size_n; i++) {
             for (int j = 1; j <= matrix.size_m; j++) {
-                double a=0;
+                T a=0;
                 for(int k = 1; k<=this->size_m; k++){
                     if(this->dict.find({i,k}) != this->dict.cend() && matrix.dict.find({k, j})!=matrix.dict.cend()){
                         a+=this->dict.find({i,k})->second*matrix.dict.find({k,j})->second;
                         //cout<<a<<endl;
                     }
                 }
-                Triplet m = {i, j, a};
+                Triplet<T> m = {i, j, a};
                 M.insert(m);
             }
         }
@@ -106,24 +102,30 @@ const DOK DOK::operator*(const DOK &matrix) const{
     }
 }
 
-const DOK DOK::operator*(double k) const{
-    DOK M = *this;
+template<typename  T>
+const DOK<T> DOK<T>::operator*(T& k) const{
+    DOK<T> M = *this;
+    for(auto i: M.dict){
+        M.dict[i.first]*=k;
+    }
+    return M;
+}
+template<typename  T>
+const DOK<T> DOK<T>::operator*(const T& k) const{
+    DOK<T> M = *this;
     for(auto i: M.dict){
         M.dict[i.first]*=k;
     }
     return M;
 }
 
-const DOK operator*(double k, const DOK &matrix){
-    return matrix*k;
-}
-ostream& operator<<(ostream &os, const DOK &matrix){
-    matrix.DOK::print();
-    return os;
-}
- double& DOK::operator()(int row, int col){
+template<typename  T>
+ T& DOK<T>::operator()(int row, int col){
     return this->dict.find({row, col})->second;
 }
-const double& DOK::operator()(int row, int col) const{
+template<typename  T>
+const T& DOK<T>::operator()(int row, int col) const{
     return this->dict.find({row, col})->second;
 }
+
+template class Matrices<double>;
