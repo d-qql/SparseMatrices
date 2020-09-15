@@ -11,11 +11,11 @@ int main() {
                           {3, 1, 7},
                           {3, 2, 8},
                           {3, 3, 9}};
-    DOK<double> k = DOK<double>(in, 3, 3);
-
-    DOK<double> p = DOK<double>(in, 3, 3);
-    cout<<p*k;
-    k.print();
+    Matrices<double>* k = new DOK<double>(in, 3, 3);
+    cout<<k;
+    /*Matrices<double> p = DOK<double>(in, 3, 3);
+    cout<<(*p)*(*k);
+    k->print();
     p.print();
     p=p+k;
     double m = 2;
@@ -34,7 +34,6 @@ int main() {
     cout<<p(1, 3);
    p(1, 3) = 2;
     cout<<p(1, 3);
-
-
+*/
     return 0;
 }

@@ -17,18 +17,19 @@ class Matrices
 {
 public:
     // Виртуальный деструктор
+
     virtual ~Matrices() = 0;
 
     /*
-     * Виртуальные методы, должны быть реализованы вашим контейнером
+     * Виртуальные методы, должны быть реализованы вашим классом
      */
 
     virtual void fill(vector<Triplet<T>> &matrix) = 0;
-    virtual const Matrices<T> operator+(const Matrices<T> &matrix) const = 0;
-    virtual const Matrices<T> operator-(const Matrices<T> &matrix) const = 0;
-    virtual const Matrices<T> operator*(const Matrices<T> &matrix) const = 0;
-    virtual const Matrices<T> operator*(T& k) const = 0;
-    virtual const Matrices<T> operator*(const T& k) const = 0;
+    virtual Matrices<T>& operator+(const Matrices<T> &matrix) = 0;
+    virtual Matrices<T>& operator-(const Matrices<T> &matrix) = 0;
+    virtual Matrices<T>& operator*(const Matrices<T> &matrix) = 0;
+    virtual Matrices<T>& operator*(T& k) = 0;
+    virtual Matrices<T>& operator*(const T& k) = 0;
     virtual T& operator()(int row, int col) = 0;
     virtual const T& operator()(int row, int col) const = 0;
 };

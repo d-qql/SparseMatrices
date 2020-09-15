@@ -13,6 +13,7 @@ using namespace std;
 
 template<typename T>
 class DOK: public Matrices<T>{
+    friend class Matrices<T>;
 private:
     /*
      * Dictionary of Keys, pair<int, int> is coordinates of non-zero elements,
@@ -23,20 +24,54 @@ private:
     int size_m;
    // int count;
 public:
-    DOK(vector<Triplet<T>> &matrix, int n, int m);
+
+
+    DOK(vector<Triplet<T>> &matrix, int n, int m) {
+        //cout<<"Input height and weight of matrix: "<<endl;
+        //cin>>n>>m;
+        this->resize(n, m);
+        this->fill(matrix);
+    }
     DOK(int n, int m);
     ~DOK(){};
-    void fill(vector<Triplet<T>> &matrix);
+    void fill(vector<Triplet<T>> &matrix) override;
     void insert(const Triplet<T> &Element);
     void resize(int n, int m);
     void print() const;
-    const DOK<T> operator+(const DOK<T> &matrix) const;
-    const DOK<T> operator-(const DOK<T> &matrix) const;
+    Matrices<T>& operator+(const Matrices<T>& matrix) override{
+        {
+            try{
+                if(this->size_n != matrix.size_n || this->size_m != matrix.size_m) throw 1;
+                DOK<T>& M = *this;
+                for(auto j: matrix.dict){
+                    if(M.dict.find(j.first)!=M.dict.cend()) {
+                        M.dict[j.first] += j.second;
+                    }else{
+                        M.dict.insert({j.first, j.second});
+                        //M.count++;
+                    }
+                }
+                return M;
+            }
+            catch (int a) {
+                cout<<"Sizes of Matrices are different."<<endl;
+            }
+        }
 
-    const DOK<T> operator*(const DOK<T> &matrix) const;
-    const DOK<T> operator*(T& k) const;
-    const DOK<T> operator*(const T& k) const;
-    T& operator()(int row, int col);
+    }
+    //const DOK<T> operator+(const DOK<T> &matrix) const;
+    Matrices<T>& operator-(const Matrices<T> &matrix) override;
+    //const DOK<T> operator-(const DOK<T> &matrix) const;
+    Matrices<T>& operator*(const Matrices<T> &matrix) override;
+    //const DOK<T> operator*(const DOK<T> &matrix) const;
+    Matrices<T>& operator*(T& k) override;
+    //const DOK<T>& operator*(T& k) const;
+    Matrices<T>& operator*(const T& k) override;
+    //const DOK<T> operator*(const T& k) const;
+
+
+
+    T& operator()(int row, int col) override;
     const T& operator()(int row, int col) const;
 };
 
