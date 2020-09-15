@@ -38,27 +38,7 @@ public:
     void insert(const Triplet<T> &Element);
     void resize(int n, int m);
     void print() const;
-    Matrices<T>& operator+(const Matrices<T>& matrix) override{
-        {
-            try{
-                if(this->size_n != matrix.size_n || this->size_m != matrix.size_m) throw 1;
-                DOK<T>& M = *this;
-                for(auto j: matrix.dict){
-                    if(M.dict.find(j.first)!=M.dict.cend()) {
-                        M.dict[j.first] += j.second;
-                    }else{
-                        M.dict.insert({j.first, j.second});
-                        //M.count++;
-                    }
-                }
-                return M;
-            }
-            catch (int a) {
-                cout<<"Sizes of Matrices are different."<<endl;
-            }
-        }
-
-    }
+    Matrices<T>& operator+(const Matrices<T>& matrix) override;
     //const DOK<T> operator+(const DOK<T> &matrix) const;
     Matrices<T>& operator-(const Matrices<T> &matrix) override;
     //const DOK<T> operator-(const DOK<T> &matrix) const;
