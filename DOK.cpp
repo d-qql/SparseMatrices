@@ -7,7 +7,13 @@ template<typename  T>
 DOK<T>::DOK(int n, int m){
     this->resize(n, m);
 }
-
+template<typename  T>
+DOK<T>::DOK(vector<Triplet<T>> &matrix, int n, int m) {
+    //cout<<"Input height and weight of matrix: "<<endl;
+    //cin>>n>>m;
+    this->resize(n, m);
+    this->fill(matrix);
+}
 template<typename  T>
 void DOK<T>::fill(vector<Triplet<T>> &matrix) {
     //this->count=matrix.size();
@@ -45,37 +51,61 @@ void DOK<T>::print() const {
         cout<<endl;
     }
 }
-template<typename T>
-Matrices<T>& DOK<T>::operator+(const Matrices<T>& matrix) {
+
+template<typename  T>
+DOK<T>& DOK<T>::operator+=(const DOK<T> &matrix){
     try{
         if(this->size_n != matrix.size_n || this->size_m != matrix.size_m) throw 1;
-        DOK<T>& M = *this;
         for(auto j: matrix.dict){
-            if(M.dict.find(j.first)!=M.dict.cend()) {
-                M.dict[j.first] += j.second;
+            if(this->dict.find(j.first)!=this->dict.cend()) {
+                this->dict[j.first] += j.second;
             }else{
-                M.dict.insert({j.first, j.second});
+                this->dict.insert({j.first, j.second});
                 //M.count++;
             }
         }
-        return M;
+        return *this;
+    }
+    catch (int a) {
+        cout<<"Sizes of Matrices are different."<<endl;
+    }
+}
+template<typename T>
+const DOK<T> DOK<T>::operator+(const DOK<T>& matrix) const{
+    DOK<T> t = *this;
+    return t+=matrix;
+}
+
+template<typename T>
+DOK<T>& DOK<T>::operator-=(const DOK<T>& matrix){
+    try{
+        if(this->size_n != matrix.size_n || this->size_m != matrix.size_m) throw 1;
+        for(auto j: matrix.dict){
+            if(this->dict.find(j.first)!=this->dict.cend()) {
+                this->dict[j.first] -= j.second;
+            }else{
+                this->dict.insert({j.first, -j.second});
+                //M.count++;
+            }
+        }
+        return *this;
     }
     catch (int a) {
         cout<<"Sizes of Matrices are different."<<endl;
     }
 }
 
-template<typename T>
-Matrices<T>& DOK<T>::operator-(const Matrices<T> &matrix){
-    return -1.*matrix+*this;
+template<typename  T>
+const DOK<T> DOK<T>::operator-(const DOK<T> &matrix) const{
+    DOK<T> t = *this;
+    return t-=matrix;
 }
 
-
-template<typename T>
-Matrices<T>& DOK<T>::operator*(const Matrices<T> &matrix){
+template<typename  T>
+DOK<T>& DOK<T>::operator*=(const DOK<T> &matrix){
     try {
         if(this->size_m != matrix.size_n) throw 1;
-        Matrices<T>& M = DOK(this->size_n, matrix.size_m);
+        DOK<T> M = DOK(this->size_n, matrix.size_m);
         for (int i = 1; i <= this->size_n; i++) {
             for (int j = 1; j <= matrix.size_m; j++) {
                 T a=0;
@@ -89,7 +119,8 @@ Matrices<T>& DOK<T>::operator*(const Matrices<T> &matrix){
                 M.insert(m);
             }
         }
-        return move(M);
+        *this=M;
+        return *this;
     }
     catch (int a) {
         cout<<"Wrong sizes of matrices to multiplication"<<endl;
@@ -97,25 +128,39 @@ Matrices<T>& DOK<T>::operator*(const Matrices<T> &matrix){
 }
 
 template<typename T>
-Matrices<T>& DOK<T>::operator*(T& k){
-    Matrices<T>& M = *this;
-    for(auto i: M.dict){
-        M.dict[i.first]*=k;
-    }
-    return move(M);
+const DOK<T> DOK<T>::operator*(const DOK<T>& matrix) const{
+    DOK<T> t = *this;
+    return t*=matrix;
 }
 
 template<typename T>
-Matrices<T>& DOK<T>::operator*(const T& k){
-    Matrices<T>& M = *this;
-    for(auto i: M.dict){
-        M.dict[i.first]*=k;
+DOK<T>& DOK<T>::operator*=(T& k){
+    for(auto i: this->dict){
+        this->dict[i.first]*=k;
     }
-    return move(M);
+    return *this;
+}
+template<typename  T>
+const DOK<T> DOK<T>::operator*(T& k) const{
+    DOK<T> t = *this;
+    return t*=k;
+}
+
+template<typename T>
+DOK<T>& DOK<T>::operator*=(const T& k){
+    for(auto i: this->dict){
+        this->dict[i.first]*=k;
+    }
+    return *this;
+}
+template<typename  T>
+const DOK<T> DOK<T>::operator*(const T& k) const{
+    DOK<T> t = *this;
+    return t*=k;
 }
 
 template<typename  T>
- T& DOK<T>::operator()(int row, int col){
+T& DOK<T>::operator()(int row, int col){
     return this->dict.find({row, col})->second;
 }
 template<typename  T>
@@ -124,4 +169,3 @@ const T& DOK<T>::operator()(int row, int col) const{
 }
 
 template class DOK<double>;
-

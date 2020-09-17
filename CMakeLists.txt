@@ -3,4 +3,4 @@ project(SparseMatrices)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(SparseMatrices main.cpp DOK.cpp DOK.h Matrices.h)
+add_executable(SparseMatrices main.cpp DOK.cpp DOK.h )
