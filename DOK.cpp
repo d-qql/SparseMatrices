@@ -3,6 +3,7 @@
 //
 
 #include "DOK.h"
+double tolerance = 1e-8;
 template<typename  T>
 DOK<T>::DOK(int n, int m){
     this->resize(n, m);
@@ -44,13 +45,65 @@ void DOK<T>::resize(int n, int m){
 template<typename  T>
 void DOK<T>::print() const {
     cout<<endl;
-    for(int i = 1; i <= this->size_n; i++){
-        for(int j = 1; j <= this->size_m; j++){
+    for(int i = 0; i < this->size_n; i++){
+        for(int j = 0; j < this->size_m; j++){
             if(this->dict.find({i, j})!= this->dict.cend()) cout<<this->dict.find(make_pair(i, j))->second<<" "; else cout<<0<<" ";
         }
         cout<<endl;
     }
 }
+
+template<typename T>
+pair<int, int> DOK<T>::getSize() const{
+    return {size_n, size_m};
+}
+template<typename T>
+T DOK<T>::norm(const vector<T> x){
+    T result = 0;
+    for(int i = 0; i < x.size(); i++){
+        result+=pow(x[i],2);
+    }
+    return sqrt(result);
+}
+
+template<typename T>
+vector<T> DOK<T>::gradientDownShifting(vector<T> X, vector<T> b){
+    DOK<T> A = *this;
+
+    while (norm(A*X - b) >= tolerance){
+        vector<T> r = A*X-b;
+        X = X - (r*r/(r*A*r))*r;
+    }
+    return X;
+}
+
+template<typename T>
+map<int, double> DOK<T>::Polinome(){
+    map<int, double> R;
+    int n = this->getSize().first;
+    cout<<n<<endl;
+    DOK<T> I = DOK<T>(n, n);
+    DOK<T> M = DOK<T>(n, n);
+    for(int i = 0; i < n; i++){
+        I.insert({i, i, 1});
+    }
+    cout<<I<<endl;
+    double c = 1;
+    R.insert({n, c});
+    for(int i = 0; i < n; i++){
+        M = *this*M+I*c;
+        DOK<T> AM = *this*M;
+        double tr = 0;
+        for(int j = 0; j < n; j++){
+            tr+=AM(j, j);
+        }
+        c = -tr/(i+1);
+        if(abs(c)>tolerance) R.insert({n-i-1, c});
+    }
+    return R;
+}
+
+
 
 template<typename  T>
 DOK<T>& DOK<T>::operator+=(const DOK<T> &matrix){
@@ -106,10 +159,10 @@ DOK<T>& DOK<T>::operator*=(const DOK<T> &matrix){
     try {
         if(this->size_m != matrix.size_n) throw 1;
         DOK<T> M = DOK(this->size_n, matrix.size_m);
-        for (int i = 1; i <= this->size_n; i++) {
-            for (int j = 1; j <= matrix.size_m; j++) {
+        for (int i = 0; i < this->size_n; i++) {
+            for (int j = 0; j < matrix.size_m; j++) {
                 T a=0;
-                for(int k = 1; k<=this->size_m; k++){
+                for(int k = 0; k<this->size_m; k++){
                     if(this->dict.find({i,k}) != this->dict.cend() && matrix.dict.find({k, j})!=matrix.dict.cend()){
                         a+=this->dict.find({i,k})->second*matrix.dict.find({k,j})->second;
                         //cout<<a<<endl;
@@ -132,6 +185,7 @@ const DOK<T> DOK<T>::operator*(const DOK<T>& matrix) const{
     DOK<T> t = *this;
     return t*=matrix;
 }
+
 
 template<typename T>
 DOK<T>& DOK<T>::operator*=(T& k){
@@ -169,3 +223,4 @@ const T& DOK<T>::operator()(int row, int col) const{
 }
 
 template class DOK<double>;
+//template class DOK<int>;
